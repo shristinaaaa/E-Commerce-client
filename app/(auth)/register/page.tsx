@@ -9,13 +9,14 @@ export const metadata: Metadata = {
     description: ''
 }
 
-const Login = () => {
+const Register = () => {
+    
     return (
         <main className='tracking-wider h-screen flex justify-center items-center flex-col'>
             <div className='border border-gray-300 p-4 rounded-md min-h-[300px] w-[300px] flex flex-col gap-4'>
                 <div>
                     <h1 className='text-2xl font-semibold text-gray-600 text-center'>
-                        Login
+                        Register
                     </h1>
                     <p className='text-xs text-gray-500 text-center'>
                         Fill the form below to continue
@@ -46,4 +47,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register

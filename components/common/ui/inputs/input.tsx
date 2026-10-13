@@ -1,16 +1,21 @@
+
 import React from 'react'
+import { FieldValues, UseFormRegister, Path } from 'react-hook-form';
 import { LuAsterisk } from "react-icons/lu";
 
-interface IProps{
-  name:string;
-  id:string;
-  label:string;
-  placeholder:string
-  type?:'text'|'number'|'password'|'email'
-  required?:boolean
+interface IProps<T extends FieldValues>{
+    name:Path<T>;
+    id:string;
+    label:string;
+    placeholder:string
+    type?:'text'|'number'|'password'|'email'
+    required?:boolean
+    // onChange:(e:React.ChangeEvent<HTMLInputElement>)=>void
+    register:UseFormRegister<T>
+    error?:string
 }
 
-const Input = ({name,id,label,type='text',placeholder,required=false}:IProps) => {
+function Input<T extends FieldValues>({name,id,label,type='text',placeholder,required=false,register,error}:IProps<T>) {
   return (
     <div className='flex flex-col gap-1'>
                         <div className='flex' >
@@ -24,12 +29,15 @@ const Input = ({name,id,label,type='text',placeholder,required=false}:IProps) =>
                         </div>
 
                         <input
-                            className='border border-gray-200 py-2 px-2.5 rounded-md focus:border-blue-500 focus:outline-blue-500'
+                            className={`border py-2 px-2.5 rounded-sm ${error ? 'border-red-500 focus:border-red-500 focus:outline-red-500' : 'border-gray-200 focus:border-blue-500 focus:outline-blue-500'}`}
                             placeholder={placeholder}
-                            name={name}
+                            {...register(name, { required: required ? 'required field' : false })}
+                            // name={name}
                             id={id}
                             type={type}
+                            // onChange={onChange}
                         />
+                        <small className='text-red-500 h-5 -mt-1 '>{error}</small>
                     </div>
   )
 }
