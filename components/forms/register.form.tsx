@@ -24,7 +24,7 @@ const Registerform = () => {
 
   console.log('form errors',errors);
 
-  const onSubmit = (data:TRegisterInput ) => {
+  const onSubmit = (data:TRegisterInput ) => {  //data parameter contains the form values that pass validation 
     console.log('register form submitted',data)
   }
 

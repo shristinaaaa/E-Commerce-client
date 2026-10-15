@@ -16,7 +16,7 @@ interface IProps<T extends FieldValues>{
 }
 
 function Input<T extends FieldValues>({name,id,label,type='text',placeholder,required=false,register,error}:IProps<T>) {
-  return (
+  return ( 
     <div className='flex flex-col gap-1'>
                         <div className='flex' >
                           <label

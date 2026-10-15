@@ -1,5 +1,6 @@
-
+// 'use client'
 import Loginform from '@/components/forms/login.form'
+//import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
@@ -8,6 +9,8 @@ export const metadata: Metadata = {
     title: 'Login|E Commerce',
     description: ''
 }
+
+// const client=new QueryClient()
 
 const Login = () => {
     return (
@@ -22,7 +25,9 @@ const Login = () => {
                     </p>
                 </div>
 
-                <Loginform />
+                {/* <QueryClientProvider client={client}> */}
+                    <Loginform />
+                {/* </QueryClientProvider> */}
 
                 <div className='text-center'>
                     <Link href={'/forgot-password'}>

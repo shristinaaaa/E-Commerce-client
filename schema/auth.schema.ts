@@ -4,7 +4,7 @@ import * as yup from 'yup'
 export const loginSchema = yup.object({
     email: yup.string().email('INVALID EMAIL!').required('EMAIL IS REQUIRED'),
     password: yup.string().required('PASSWORD IS REQUIRED'),
-    phone: yup.string().required('PHONE IS REQUIRED')
+    
 })
 
 //?register

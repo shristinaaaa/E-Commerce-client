@@ -10,6 +10,14 @@ import * as yup from 'yup'
 import { PassThrough } from 'node:stream'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { loginSchema } from '@/schema/auth.schema'
+import axios from 'axios'
+import {login} from  '@/api/auth.api'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
+import { Role } from '@/types/enum.types'
+import { useRouter } from 'next/navigation'
+
+
 
 
 // const loginSchema = yup.object({
@@ -20,6 +28,8 @@ import { loginSchema } from '@/schema/auth.schema'
 
  
 const Loginform = () => {
+    const router=useRouter()
+
     // const[formdata,setformdata]=useState({ //using usestate to handle user interactivity
     //     email:'',  //tala jj use vako xa name attribute ma tei haru rakhne yaha as fields
     //     password:'',
@@ -36,28 +46,62 @@ const Loginform = () => {
         defaultValues: {
             email: 'ram@gmail.com',
             password: '',
-            phone: ''
+            
         },
-        resolver: yupResolver(loginSchema)
+        resolver: yupResolver(loginSchema),
         // resolver: zodResolver(loginSchema)
+        mode:'all'
     })
 
-    console.log('form errors', errors)
+    const {isPending,mutate}=useMutation({   //yo data ra uta login baata aako response eutai kura ho ra mutate vaneko login nai change vara aakofunction ho
+        mutationFn:login,
+        onSuccess:(response)=>{   //yo response chai uta login function success vaei aako response ho
+            console.log('on mutation success',response)
+            //navigate user based on role
+            if(response.data.role===Role.ADMIN){
+                router.replace('/admin')
+            }else{
+                router.replace('/')
+            }
 
-    console.log(watch('email'))
+            //show toast msg
+            toast.success(response.message??'login successful')
+            
+    },
+        onError:(error)=>{
+            console.log('on mutation error',error)
+            //show toast msg 
+            toast.error(error?.message??'something went wrong')
+        }
+    })
+    // console.log('is loading',isPending)
 
-    const onChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
-        console.log('input changed')
+    // console.log('form errors', errors)
+
+    // console.log(watch('email')) 
+
+    // const onChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+    //     console.log('input changed')
         // setformdata({
         //     ...formdata,
         //     [e.target.name]:e.target.value
         // })
-    }
+    
+ 
 
-    const onSubmit:SubmitHandler<TLoginInput>=(formdata)=>{
-        // e.preventDefault(); yo kaam aba hookform ko handlesubmit le afai grdiyo
-        console.log('form submitted',formdata)
-        //api call
+    //send post req,pass gareko data i.e js object lai json ma convert garne body ma add garne ra request send garne kaam axios le gaardinxa
+    //axios+react query-react query  is a library that makes api integration simple,caches responses,manages status using hooks 
+    const onSubmit:SubmitHandler<TLoginInput>=async (formdata)=>{
+        // try{
+             // e.preventDefault(); yo kaam aba hookform ko handlesubmit le afai grdiyo
+        // console.log('form submitted',formdata)
+         //api call
+        // const data=await login(formdata)
+        // console.log('response data',data) 
+        // }catch(error){
+        //     console.log(error)
+        // }
+        mutate(formdata)
     }
 
 
@@ -117,21 +161,18 @@ const Loginform = () => {
 
                     {/* button */}
 
-                <Input<TLoginInput>
-                        placeholder='Enter your phone'
-                        name='phone'
-                        id='phone'
-                        label='Phone'
-                        type='text'
-                        error={errors.phone?.message}
-                        // onChange={onChange}
-                        register={register}
-                    />    
+                 
 
-                <Button
+               <div className='w-full mt-3'>
+                 <Button
                 type='submit'
-                label='login'
+            
+                // label='login'
+                disabled={isPending}
+                label={isPending?'logging in...':'login'}
                 />
+               </div>
+
 
                 </form>
   )
